@@ -149,7 +149,7 @@ class HomeView extends GetView<HomeController> {
                       ],
                     ),
                     Tab(
-                      text: "AASAA",
+                      text: "Belum Build",
                     ),
                   ],
                 ),
@@ -263,7 +263,14 @@ class AppBarCustom extends StatelessWidget {
               ),
             ],
           ),
-          IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+          IconButton(
+              onPressed: () {
+                Get.toNamed(Routes.SETTINGS);
+              },
+              icon: Icon(
+                Icons.settings,
+                color: Colors.grey,
+              )),
         ],
       ),
     );
