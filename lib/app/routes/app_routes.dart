@@ -7,6 +7,7 @@ abstract class Routes {
   static const INTRODUCTION = _Paths.INTRODUCTION;
   static const DETAIL_SURAH = _Paths.DETAIL_SURAH;
   static const DETAIL_JUZ = _Paths.DETAIL_JUZ;
+  static const SETTINGS = _Paths.SETTINGS;
 }
 
 abstract class _Paths {
@@ -15,4 +16,5 @@ abstract class _Paths {
   static const INTRODUCTION = '/introduction';
   static const DETAIL_SURAH = '/detail-surah';
   static const DETAIL_JUZ = '/detail-juz';
+  static const SETTINGS = '/settings';
 }
