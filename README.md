@@ -1,16 +1,23 @@
-# app_quran
+# Aplikasi Al Quran dengan API (Must Connect Internet)
 
-A new Flutter project.
+- Aplikasi Al Quran menggunakan API dari https://api.quran.sutanlab.id/
+- Download Aplikasi Al Quran https://github.com/dimassfeb-09/app-quran-flutter/blob/master/lib/FInal%20App/app-release.apk
 
-## Getting Started
+## Fitur Aplikasi
 
-This project is a starting point for a Flutter application.
+Fitur Aplikasi yang dapat digunakan
 
-A few resources to get you started if this is your first Flutter project:
+- Terdapat Semua Daftar Surah
+- Terdapat 30 Juz
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Fitur Aplikasi yang belum dapat digunakan
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Bookmark
+- Mulai suara Ayat
+- Mode Gelap
+- Banyak lainnya
+
+## Bahasa Program
+
+- Dart
+- Flutter
