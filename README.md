@@ -14,7 +14,7 @@ Fitur Aplikasi yang belum dapat digunakan
 
 - Bookmark
 - Mulai suara Ayat
-- Mode Gelap
+- Mode Gelap (Soon)
 - Banyak lainnya
 
 ## Bahasa Program
