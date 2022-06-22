@@ -1,3 +1,4 @@
+import 'package:app_quran/app/modules/settings/views/settings_view.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -13,10 +14,12 @@ class DetailSurahView extends GetView<DetailSurahController> {
 
   Surah surah = Get.arguments;
 
+  Public public = Public();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: public.status == true ? Colors.black : Colors.white,
       appBar: AppBar(
         leading: IconButton(
           padding: EdgeInsets.only(left: 24),
@@ -24,7 +27,7 @@ class DetailSurahView extends GetView<DetailSurahController> {
             Get.back();
           },
           icon: Icon(Icons.arrow_back),
-          color: Colors.black,
+          color: public.status == true ? Colors.white : Colors.black,
         ),
         title: Text(
           "Quran App",
@@ -43,7 +46,7 @@ class DetailSurahView extends GetView<DetailSurahController> {
             ),
           ),
         ],
-        backgroundColor: Colors.white,
+        backgroundColor: public.status == true ? Colors.black : Colors.white,
         elevation: 0,
         centerTitle: true,
         toolbarHeight: 60,
@@ -161,14 +164,23 @@ class DetailSurahView extends GetView<DetailSurahController> {
                             padding: const EdgeInsets.all(15),
                             child: Text(
                               "${getDetailSurah.verses![index].text!.arab}",
-                              style: TextStyle(fontSize: 32, height: 2),
+                              style: TextStyle(
+                                  fontSize: 32,
+                                  height: 2,
+                                  color: public.status == true
+                                      ? Colors.white
+                                      : Colors.black),
                               textAlign: TextAlign.right,
                             ),
                           ),
                           SizedBox(height: 16),
                           Text(
                             "${getDetailSurah.verses![index].translation!.id}",
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: public.status == true
+                                    ? Colors.white
+                                    : Colors.black),
                           ),
                           SizedBox(height: 16),
                           Divider(
