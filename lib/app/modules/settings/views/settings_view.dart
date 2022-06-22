@@ -187,7 +187,7 @@ class RowSettings extends StatelessWidget {
           ),
         ),
         Text(
-          "1.1",
+          "1.2",
           style: TextStyle(
             fontFamily: "Poppins",
             fontSize: 20,
