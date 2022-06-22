@@ -51,7 +51,7 @@ class SettingsView extends GetView<SettingsController> {
             style: TextStyle(
               fontFamily: "PoppinsBold",
               fontSize: 20,
-              color: Public._status == true ? Colors.white : Color(0xFF672CBC),
+              color: Color(0xFF672CBC),
             ),
           ),
           backgroundColor: Public._status == true ? Colors.black : Colors.white,

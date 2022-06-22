@@ -134,7 +134,7 @@ class DetailJuzView extends GetView<DetailJuzController> {
                                         child: Text(
                                           "${index + 1}",
                                           style: TextStyle(
-                                            color: Colors.black,
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ),

@@ -1,3 +1,4 @@
+import 'package:app_quran/app/assets/theme/colors_constant.dart';
 import 'package:app_quran/app/modules/settings/views/settings_view.dart';
 import 'package:flutter/material.dart';
 
@@ -79,8 +80,29 @@ class DetailSurahView extends GetView<DetailSurahController> {
                     children: [
                       InkWell(
                         onTap: () => Get.defaultDialog(
+                          radius: 10,
+                          titleStyle: TextStyle(
+                            color: public.status == true
+                                ? Colors.white
+                                : Colors.black,
+                          ),
                           title: "${surah.name!.transliteration!.id}",
-                          content: Text("${surah.tafsir!.id}"),
+                          onCancel: () {},
+                          cancelTextColor: public.status == true
+                              ? Colors.white
+                              : Colors.black,
+                          buttonColor: PurpleApp,
+                          backgroundColor: public.status == true
+                              ? Colors.black
+                              : Colors.white,
+                          content: Text(
+                            "${surah.tafsir!.id}",
+                            style: TextStyle(
+                              color: public.status == true
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
                         ),
                         child: Text(
                           "${surah.name!.transliteration!.id}",
@@ -156,7 +178,10 @@ class DetailSurahView extends GetView<DetailSurahController> {
                                     children: [
                                       CircleAvatar(
                                         backgroundColor: Color(0xFF863ED5),
-                                        child: Text("${index + 1}"),
+                                        child: Text(
+                                          "${index + 1}",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
