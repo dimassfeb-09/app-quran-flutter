@@ -8,8 +8,8 @@ class Juz {
 
   Juz.fromJson(Map<String, dynamic> json) {
     juz = json['juz'];
-    start = json['start'];
-    end = json['end'];
+    start = json['juzStartInfo'];
+    end = json['juzEndInfo'];
     if (json['verses'] != null) {
       verses = <Verses>[];
       json['verses'].forEach((v) {
@@ -21,7 +21,7 @@ class Juz {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['juz'] = juz;
-    data['start'] = start;
+    data['juzEndSurahNumber'] = start;
     data['end'] = end;
     if (verses != null) {
       data['verses'] = verses?.map((v) => v.toJson()).toList();
