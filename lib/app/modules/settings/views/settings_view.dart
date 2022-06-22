@@ -11,11 +11,13 @@ class Public {
   static RxBool _status = false.obs;
 
   get status => _status;
+
+  static GetStorage box = GetStorage();
+
+  get boxData => box;
 }
 
 class SettingsView extends GetView<SettingsController> {
-  GetStorage box = GetStorage();
-
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -26,6 +28,20 @@ class SettingsView extends GetView<SettingsController> {
             padding: EdgeInsets.only(left: 24),
             onPressed: () {
               Get.back();
+              if (Public._status == true) {
+                Public.box.write(
+                  "darkMode",
+                  {"darkMode": "darkON"},
+                );
+              } else {
+                Public.box.remove("darkMode");
+                Public.box.write(
+                  "darkMode",
+                  {"darkMode": "darkOFF"},
+                );
+              }
+
+              print(Public.box.read("darkMode")["darkMode"]);
             },
             icon: Icon(Icons.arrow_back),
             color: Public._status == true ? Colors.white : Colors.black,
@@ -35,9 +51,7 @@ class SettingsView extends GetView<SettingsController> {
             style: TextStyle(
               fontFamily: "PoppinsBold",
               fontSize: 20,
-              color: Public._status == true
-                  ? Color(0xFF672CBC)
-                  : Color(0xFF672CBC),
+              color: Public._status == true ? Colors.white : Color(0xFF672CBC),
             ),
           ),
           backgroundColor: Public._status == true ? Colors.black : Colors.white,
@@ -104,17 +118,19 @@ class SettingsView extends GetView<SettingsController> {
                             GetStorage box = GetStorage();
 
                             if (Public._status == true) {
-                              box.write(
+                              Public.box.write(
                                 "darkMode",
                                 {"darkMode": "darkON"},
                               );
                             } else {
-                              box.remove("darkMode");
-                              box.write(
+                              Public.box.remove("darkMode");
+                              Public.box.write(
                                 "darkMode",
                                 {"darkMode": "darkOFF"},
                               );
                             }
+
+                            print(Public.box.read("darkMode")["darkMode"]);
                           },
                         ),
                       ),

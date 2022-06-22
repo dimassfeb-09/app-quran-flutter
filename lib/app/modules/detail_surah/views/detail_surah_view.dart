@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:app_quran/app/data/models/surah_model.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../../data/models/detailsurah_model.dart' as detailSurah;
 
 import '../controllers/detail_surah_controller.dart';
@@ -16,10 +18,14 @@ class DetailSurahView extends GetView<DetailSurahController> {
 
   Public public = Public();
 
+  GetStorage box = GetStorage();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: public.status == true ? Colors.black : Colors.white,
+      backgroundColor: box.read("darkMode")["darkMode"] == "darkON"
+          ? Colors.black
+          : Colors.white,
       appBar: AppBar(
         leading: IconButton(
           padding: EdgeInsets.only(left: 24),
@@ -27,7 +33,9 @@ class DetailSurahView extends GetView<DetailSurahController> {
             Get.back();
           },
           icon: Icon(Icons.arrow_back),
-          color: public.status == true ? Colors.white : Colors.black,
+          color: box.read("darkMode")["darkMode"] == "darkON"
+              ? Colors.white
+              : Colors.black,
         ),
         title: Text(
           "Quran App",
@@ -46,7 +54,9 @@ class DetailSurahView extends GetView<DetailSurahController> {
             ),
           ),
         ],
-        backgroundColor: public.status == true ? Colors.black : Colors.white,
+        backgroundColor: box.read("darkMode")["darkMode"] == "darkON"
+            ? Colors.black
+            : Colors.white,
         elevation: 0,
         centerTitle: true,
         toolbarHeight: 60,
@@ -114,8 +124,12 @@ class DetailSurahView extends GetView<DetailSurahController> {
               future: homeController.getDetailSurah(surah.number.toString()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return Padding(
+                    padding: EdgeInsets.only(top: 150),
+                    child: Center(
+                      child: LoadingAnimationWidget.inkDrop(
+                          color: Colors.grey, size: 50),
+                    ),
                   );
                 } else {
                   return ListView.builder(
@@ -167,7 +181,8 @@ class DetailSurahView extends GetView<DetailSurahController> {
                               style: TextStyle(
                                   fontSize: 32,
                                   height: 2,
-                                  color: public.status == true
+                                  color: box.read("darkMode")["darkMode"] ==
+                                          "darkON"
                                       ? Colors.white
                                       : Colors.black),
                               textAlign: TextAlign.right,
@@ -178,9 +193,10 @@ class DetailSurahView extends GetView<DetailSurahController> {
                             "${getDetailSurah.verses![index].translation!.id}",
                             style: TextStyle(
                                 fontSize: 16,
-                                color: public.status == true
-                                    ? Colors.white
-                                    : Colors.black),
+                                color:
+                                    box.read("darkMode")["darkMode"] == "darkON"
+                                        ? Colors.white
+                                        : Colors.black),
                           ),
                           SizedBox(height: 16),
                           Divider(

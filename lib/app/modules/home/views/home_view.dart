@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:app_quran/app/routes/app_pages.dart';
 
 import 'package:get_storage/get_storage.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../data/models/juz_model.dart' as juzModel;
 import '../controllers/home_controller.dart';
@@ -61,24 +62,10 @@ class HomeView extends GetView<HomeController> {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Padding(
-                                  padding: const EdgeInsets.only(top: 20),
+                                  padding: EdgeInsets.only(top: 150),
                                   child: Center(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircularProgressIndicator(),
-                                        SizedBox(width: 20),
-                                        Text(
-                                          "Loading...",
-                                          style: TextStyle(
-                                            color: public.status == true
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    child: LoadingAnimationWidget.inkDrop(
+                                        color: Colors.grey, size: 50),
                                   ),
                                 );
                               } else {
@@ -120,11 +107,10 @@ class HomeView extends GetView<HomeController> {
                                         child: Text(
                                           "${surah.number}",
                                           style: TextStyle(
-                                            fontSize: 12,
-                                            color: public.status == true
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
+                                              fontSize: 12,
+                                              color: public.status == true
+                                                  ? Colors.white
+                                                  : Colors.black),
                                         ),
                                       ),
                                       title: Text(
@@ -159,24 +145,10 @@ class HomeView extends GetView<HomeController> {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Padding(
-                                  padding: const EdgeInsets.only(top: 20),
+                                  padding: EdgeInsets.only(top: 150),
                                   child: Center(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircularProgressIndicator(),
-                                        SizedBox(width: 20),
-                                        Text(
-                                          "Loading...",
-                                          style: TextStyle(
-                                            color: public.status == true
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    child: LoadingAnimationWidget.inkDrop(
+                                        color: Colors.grey, size: 50),
                                   ),
                                 );
                               } else {
@@ -194,15 +166,16 @@ class HomeView extends GetView<HomeController> {
                                       leading: CircleAvatar(
                                         backgroundImage: AssetImage(
                                             "assets/images/CircleAvatar.png"),
-                                        backgroundColor: Colors.transparent,
+                                        backgroundColor: public.status == true
+                                            ? Colors.black
+                                            : Colors.white,
                                         child: Text(
                                           "${index + 1}",
                                           style: TextStyle(
-                                            fontSize: 12,
-                                            color: public.status == true
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
+                                              fontSize: 12,
+                                              color: public.status == true
+                                                  ? Colors.white
+                                                  : Colors.black),
                                         ),
                                       ),
                                       title: Text(
@@ -216,9 +189,10 @@ class HomeView extends GetView<HomeController> {
                                       subtitle: Text(
                                         "${juz.start} sampai ${juz.end}",
                                         style: TextStyle(
-                                            color: public.status == true
-                                                ? Colors.white
-                                                : Colors.black),
+                                          color: public.status == true
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
                                       ),
                                     );
                                   },
@@ -275,7 +249,7 @@ class LastReadCustom extends StatelessWidget {
                     "${lastReadSurah.value.toString() != '' ? '${lastReadSurah.value.toString()}' : 'Belum Baca'}",
                     style: TextStyle(fontFamily: "PoppinsReg", fontSize: 18),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 1),
                   Text(
                     "Surah Ke - ${lastReadSurahKe.value}",
                     style: TextStyle(fontFamily: "PoppinsReg", fontSize: 14),

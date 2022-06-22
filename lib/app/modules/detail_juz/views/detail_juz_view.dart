@@ -1,6 +1,8 @@
+import 'package:app_quran/app/modules/settings/views/settings_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:app_quran/app/data/models/juz_model.dart' as juzModel;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../controllers/detail_juz_controller.dart';
 import '../../../data/models/detailsurah_model.dart' as detailSurah;
 import 'package:http/http.dart' as http;
@@ -11,10 +13,12 @@ class DetailJuzView extends GetView<DetailJuzController> {
 
   HomeController homeController = Get.put(HomeController());
 
+  Public public = Public();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: public.status == true ? Colors.black : Colors.white,
       appBar: AppBar(
         leading: IconButton(
           padding: EdgeInsets.only(left: 24),
@@ -22,7 +26,7 @@ class DetailJuzView extends GetView<DetailJuzController> {
             Get.back();
           },
           icon: Icon(Icons.arrow_back),
-          color: Colors.black,
+          color: public.status == true ? Colors.white : Colors.black,
         ),
         title: Text(
           "Quran App",
@@ -41,7 +45,7 @@ class DetailJuzView extends GetView<DetailJuzController> {
             ),
           ),
         ],
-        backgroundColor: Colors.white,
+        backgroundColor: public.status == true ? Colors.black : Colors.white,
         elevation: 0,
         centerTitle: true,
         toolbarHeight: 60,
@@ -95,8 +99,12 @@ class DetailJuzView extends GetView<DetailJuzController> {
               future: homeController.getDetailJuz(juz.juz.toString()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return Padding(
+                    padding: EdgeInsets.only(top: 150),
+                    child: Center(
+                      child: LoadingAnimationWidget.inkDrop(
+                          color: Colors.grey, size: 50),
+                    ),
                   );
                 } else {
                   return ListView.builder(
@@ -123,7 +131,12 @@ class DetailJuzView extends GetView<DetailJuzController> {
                                     children: [
                                       CircleAvatar(
                                         backgroundColor: Color(0xFF863ED5),
-                                        child: Text("${index + 1}"),
+                                        child: Text(
+                                          "${index + 1}",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -145,14 +158,24 @@ class DetailJuzView extends GetView<DetailJuzController> {
                             padding: const EdgeInsets.all(15),
                             child: Text(
                               "${getDetailJuz.verses![index].text!.arab}",
-                              style: TextStyle(fontSize: 32, height: 2),
+                              style: TextStyle(
+                                  fontSize: 32,
+                                  height: 2,
+                                  color: public.status == true
+                                      ? Colors.white
+                                      : Colors.black),
                               textAlign: TextAlign.right,
                             ),
                           ),
                           SizedBox(height: 16),
                           Text(
                             "${getDetailJuz.verses![index].translation!.id}",
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: public.status == true
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
                           ),
                           SizedBox(height: 16),
                           Divider(

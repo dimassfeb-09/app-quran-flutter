@@ -7,10 +7,11 @@ environment:
 
 dependencies: 
   cupertino_icons: ^1.0.2
-  get: 4.6.1
+  get: 4.6.5
   get_storage: ^2.0.3
   http: ^0.13.4
   flutter_switch: 0.3.2
+  loading_animation_widget: 1.2.0+2
   flutter: 
     sdk: flutter
 
