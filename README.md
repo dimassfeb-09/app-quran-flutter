@@ -13,8 +13,8 @@ Fitur Aplikasi yang dapat digunakan
 Fitur Aplikasi yang belum dapat digunakan
 
 - Bookmark
-- Mulai suara Ayat
-- Mode Gelap (Soon)
+- Mulai suara Ayat (Soon)
+- Mode Gelap
 - Banyak lainnya
 
 ## Bahasa Program
