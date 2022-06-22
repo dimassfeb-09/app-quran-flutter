@@ -7,126 +7,148 @@ import 'package:http/http.dart';
 
 import '../controllers/settings_controller.dart';
 
-class SettingsView extends GetView<SettingsController> {
-  RxBool _status = false.obs;
+class Public {
+  static RxBool _status = false.obs;
 
+  get status => _status;
+}
+
+class SettingsView extends GetView<SettingsController> {
   GetStorage box = GetStorage();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: box.read("darkMode")["darkMode"] == "darkON"
-          ? Colors.black
-          : Colors.white,
-      appBar: AppBar(
-        leading: IconButton(
-          padding: EdgeInsets.only(left: 24),
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(Icons.arrow_back),
-          color: Colors.black,
-        ),
-        title: Text(
-          "Quran App Settings",
-          style: TextStyle(
+    return Obx(
+      () => Scaffold(
+        backgroundColor: Public._status == true ? Colors.black : Colors.white,
+        appBar: AppBar(
+          leading: IconButton(
+            padding: EdgeInsets.only(left: 24),
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(Icons.arrow_back),
+            color: Public._status == true ? Colors.white : Colors.black,
+          ),
+          title: Text(
+            "Quran App Settings",
+            style: TextStyle(
               fontFamily: "PoppinsBold",
               fontSize: 20,
-              color: Color(0xFF672CBC)),
+              color: Public._status == true
+                  ? Color(0xFF672CBC)
+                  : Color(0xFF672CBC),
+            ),
+          ),
+          backgroundColor: Public._status == true ? Colors.black : Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          toolbarHeight: 60,
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        toolbarHeight: 60,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Container(
-          margin: EdgeInsets.all(20),
-          height: 800,
-          child: Column(
-            children: [
-              RowSettings(),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Obx(
+          () => SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Container(
+              margin: EdgeInsets.all(20),
+              height: 800,
+              child: Column(
                 children: [
-                  Text(
-                    "Last Date Release",
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 20,
-                    ),
+                  RowSettings(),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Last Date Release",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 20,
+                          color: Public._status == true
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
+                      Text(
+                        "10 June 2022",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 20,
+                          color: Public._status == true
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    "10 June 2022",
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 20,
-                    ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Dark Mode",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 20,
+                          color: Public._status == true
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
+                      Obx(
+                        () => FlutterSwitch(
+                          value: Public._status.value == true ? true : false,
+                          onToggle: (val) {
+                            Public._status.value = val;
+                            print(Public._status.value);
+
+                            GetStorage box = GetStorage();
+
+                            if (Public._status == true) {
+                              box.write(
+                                "darkMode",
+                                {"darkMode": "darkON"},
+                              );
+                            } else {
+                              box.remove("darkMode");
+                              box.write(
+                                "darkMode",
+                                {"darkMode": "darkOFF"},
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Build By",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 20,
+                          color: Public._status == true
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
+                      Text(
+                        "Dimas Febriyanto",
+                        style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 20,
+                          color: Public._status == true
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Dark Mode",
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 20,
-                    ),
-                  ),
-                  Obx(
-                    () => FlutterSwitch(
-                      value: _status.value,
-                      onToggle: (val) {
-                        _status.value = val;
-                        print(_status);
-
-                        GetStorage box = GetStorage();
-
-                        if (_status == true) {
-                          box.write(
-                            "darkMode",
-                            {"darkMode": "darkON"},
-                          );
-                        } else {
-                          box.remove("darkMode");
-                          box.write(
-                            "darkMode",
-                            {"darkMode": "darkOFF"},
-                          );
-                        }
-
-                        print(box.read("darkMode")["darkMode"]);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Build By",
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 20,
-                    ),
-                  ),
-                  Text(
-                    "Dimas Febriyanto",
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -145,6 +167,7 @@ class RowSettings extends StatelessWidget {
           style: TextStyle(
             fontFamily: "Poppins",
             fontSize: 20,
+            color: Public._status == true ? Colors.white : Colors.black,
           ),
         ),
         Text(
@@ -152,6 +175,7 @@ class RowSettings extends StatelessWidget {
           style: TextStyle(
             fontFamily: "Poppins",
             fontSize: 20,
+            color: Public._status == true ? Colors.white : Colors.black,
           ),
         ),
       ],
