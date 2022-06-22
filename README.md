@@ -1,7 +1,7 @@
 # Aplikasi Al Quran dengan API (Must Connect Internet)
 
 - Aplikasi Al Quran menggunakan API dari https://api.quran.sutanlab.id/
-- Download Aplikasi Al Quran https://github.com/dimassfeb-09/app-quran-flutter/blob/master/lib/FInal%20App/app-release.apk
+- Download Aplikasi Al Quran https://github.com/dimassfeb-09/app-quran-flutter/blob/master/lib/FInal%20App/
 
 ## Fitur Aplikasi
 
