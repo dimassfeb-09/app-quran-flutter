@@ -1,273 +1,192 @@
-class Juz {
-  int? juz;
-  String? start;
-  String? end;
-  List<Verses>? verses;
+class JuzModels {
+  int? number;
+  List<Ayahs>? ayahs;
+  Surahs? surahs;
+  Edition? edition;
 
-  Juz({this.juz, this.start, this.end, this.verses});
+  JuzModels({this.number, this.ayahs, this.surahs, this.edition});
 
-  Juz.fromJson(Map<String, dynamic> json) {
-    juz = json['juz'];
-    start = json['juzStartInfo'];
-    end = json['juzEndInfo'];
-    if (json['verses'] != null) {
-      verses = <Verses>[];
-      json['verses'].forEach((v) {
-        verses?.add(Verses.fromJson(v));
+  JuzModels.fromJson(Map<String, dynamic> json) {
+    number = json['number'];
+    if (json['ayahs'] != null) {
+      ayahs = <Ayahs>[];
+      json['ayahs'].forEach((v) {
+        ayahs?.add(Ayahs.fromJson(v));
       });
     }
+    surahs = json['surahs'] != null ? Surahs?.fromJson(json['surahs']) : null;
+    edition =
+        json['edition'] != null ? Edition?.fromJson(json['edition']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['juz'] = juz;
-    data['juzEndSurahNumber'] = start;
-    data['end'] = end;
-    if (verses != null) {
-      data['verses'] = verses?.map((v) => v.toJson()).toList();
+    data['number'] = number;
+    if (ayahs != null) {
+      data['ayahs'] = ayahs?.map((v) => v.toJson()).toList();
+    }
+    if (surahs != null) {
+      data['surahs'] = surahs?.toJson();
+    }
+    if (edition != null) {
+      data['edition'] = edition?.toJson();
     }
     return data;
   }
 }
 
-class Verses {
-  Number? number;
-  Meta? meta;
-  Text? text;
-  Translation? translation;
-  Audio? audio;
-  Tafsir? tafsir;
-
-  Verses(
-      {this.number,
-      this.meta,
-      this.text,
-      this.translation,
-      this.audio,
-      this.tafsir});
-
-  Verses.fromJson(Map<String, dynamic> json) {
-    number = json['number'] != null ? Number?.fromJson(json['number']) : null;
-    meta = json['meta'] != null ? Meta?.fromJson(json['meta']) : null;
-    text = json['text'] != null ? Text?.fromJson(json['text']) : null;
-    translation = json['translation'] != null
-        ? Translation?.fromJson(json['translation'])
-        : null;
-    audio = json['audio'] != null ? Audio?.fromJson(json['audio']) : null;
-    tafsir = json['tafsir'] != null ? Tafsir?.fromJson(json['tafsir']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    if (number != null) {
-      data['number'] = number?.toJson();
-    }
-    if (meta != null) {
-      data['meta'] = meta?.toJson();
-    }
-    if (text != null) {
-      data['text'] = text?.toJson();
-    }
-    if (translation != null) {
-      data['translation'] = translation?.toJson();
-    }
-    if (audio != null) {
-      data['audio'] = audio?.toJson();
-    }
-    if (tafsir != null) {
-      data['tafsir'] = tafsir?.toJson();
-    }
-    return data;
-  }
-}
-
-class Number {
-  int? inQuran;
-  int? inSurah;
-
-  Number({this.inQuran, this.inSurah});
-
-  Number.fromJson(Map<String, dynamic> json) {
-    inQuran = json['inQuran'];
-    inSurah = json['inSurah'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['inQuran'] = inQuran;
-    data['inSurah'] = inSurah;
-    return data;
-  }
-}
-
-class Meta {
+class Ayahs {
+  int? number;
+  String? text;
+  Surah? surah;
+  int? numberInSurah;
   int? juz;
-  int? page;
   int? manzil;
+  int? page;
   int? ruku;
   int? hizbQuarter;
-  Sajda? sajda;
+  bool? sajda;
 
-  Meta(
-      {this.juz,
-      this.page,
+  Ayahs(
+      {this.number,
+      this.text,
+      this.surah,
+      this.numberInSurah,
+      this.juz,
       this.manzil,
+      this.page,
       this.ruku,
       this.hizbQuarter,
       this.sajda});
 
-  Meta.fromJson(Map<String, dynamic> json) {
+  Ayahs.fromJson(Map<String, dynamic> json) {
+    number = json['number'];
+    text = json['text'];
+    surah = json['surah'] != null ? Surah?.fromJson(json['surah']) : null;
+    numberInSurah = json['numberInSurah'];
     juz = json['juz'];
-    page = json['page'];
     manzil = json['manzil'];
+    page = json['page'];
     ruku = json['ruku'];
     hizbQuarter = json['hizbQuarter'];
-    sajda = json['sajda'] != null ? Sajda?.fromJson(json['sajda']) : null;
+    sajda = false;
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
+    data['number'] = number;
+    data['text'] = text;
+    if (surah != null) {
+      data['surah'] = surah?.toJson();
+    }
+    data['numberInSurah'] = numberInSurah;
     data['juz'] = juz;
-    data['page'] = page;
     data['manzil'] = manzil;
+    data['page'] = page;
     data['ruku'] = ruku;
     data['hizbQuarter'] = hizbQuarter;
-    if (sajda != null) {
-      data['sajda'] = sajda?.toJson();
+    data['sajda'] = false;
+    return data;
+  }
+}
+
+class Surah {
+  int? number;
+  String? name;
+  String? englishName;
+  String? englishNameTranslation;
+  String? revelationType;
+  int? numberOfAyahs;
+
+  Surah(
+      {this.number,
+      this.name,
+      this.englishName,
+      this.englishNameTranslation,
+      this.revelationType,
+      this.numberOfAyahs});
+
+  Surah.fromJson(Map<String, dynamic> json) {
+    number = json['number'];
+    name = json['name'];
+    englishName = json['englishName'];
+    englishNameTranslation = json['englishNameTranslation'];
+    revelationType = json['revelationType'];
+    numberOfAyahs = json['numberOfAyahs'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['number'] = number;
+    data['name'] = name;
+    data['englishName'] = englishName;
+    data['englishNameTranslation'] = englishNameTranslation;
+    data['revelationType'] = revelationType;
+    data['numberOfAyahs'] = numberOfAyahs;
+    return data;
+  }
+}
+
+class Surahs {
+  Surah? s1;
+  Surah? s2;
+
+  Surahs({this.s1, this.s2});
+
+  Surahs.fromJson(Map<String, dynamic> json) {
+    s1 = json['1'] != null ? Surah?.fromJson(json['1']) : null;
+    s2 = json['2'] != null ? Surah?.fromJson(json['2']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    if (s1 != null) {
+      data['1'] = s1?.toJson();
+    }
+    if (s2 != null) {
+      data['2'] = s2?.toJson();
     }
     return data;
   }
 }
 
-class Sajda {
-  bool? recommended;
-  bool? obligatory;
+class Edition {
+  String? identifier;
+  String? language;
+  String? name;
+  String? englishName;
+  String? format;
+  String? type;
+  String? direction;
 
-  Sajda({this.recommended, this.obligatory});
+  Edition(
+      {this.identifier,
+      this.language,
+      this.name,
+      this.englishName,
+      this.format,
+      this.type,
+      this.direction});
 
-  Sajda.fromJson(Map<String, dynamic> json) {
-    recommended = json['recommended'];
-    obligatory = json['obligatory'];
+  Edition.fromJson(Map<String, dynamic> json) {
+    identifier = json['identifier'];
+    language = json['language'];
+    name = json['name'];
+    englishName = json['englishName'];
+    format = json['format'];
+    type = json['type'];
+    direction = json['direction'];
   }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    data['recommended'] = recommended;
-    data['obligatory'] = obligatory;
-    return data;
-  }
-}
-
-class Text {
-  String? arab;
-  Transliteration? transliteration;
-
-  Text({this.arab, this.transliteration});
-
-  Text.fromJson(Map<String, dynamic> json) {
-    arab = json['arab'];
-    transliteration = json['transliteration'] != null
-        ? Transliteration?.fromJson(json['transliteration'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['arab'] = arab;
-    if (transliteration != null) {
-      data['transliteration'] = transliteration?.toJson();
-    }
-    return data;
-  }
-}
-
-class Transliteration {
-  String? en;
-
-  Transliteration({this.en});
-
-  Transliteration.fromJson(Map<String, dynamic> json) {
-    en = json['en'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['en'] = en;
-    return data;
-  }
-}
-
-class Translation {
-  String? en;
-  String? id;
-
-  Translation({this.en, this.id});
-
-  Translation.fromJson(Map<String, dynamic> json) {
-    en = json['en'];
-    id = json['id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['en'] = en;
-    data['id'] = id;
-    return data;
-  }
-}
-
-class Audio {
-  String? primary;
-  List<String>? secondary;
-
-  Audio({this.primary, this.secondary});
-
-  Audio.fromJson(Map<String, dynamic> json) {
-    primary = json['primary'];
-    secondary = json['secondary'].cast<String>();
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['primary'] = primary;
-    data['secondary'] = secondary;
-    return data;
-  }
-}
-
-class Tafsir {
-  Id? id;
-
-  Tafsir({this.id});
-
-  Tafsir.fromJson(Map<String, dynamic> json) {
-    id = json['id'] != null ? Id?.fromJson(json['id']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    if (id != null) {
-      data['id'] = id?.toJson();
-    }
-    return data;
-  }
-}
-
-class Id {
-  String? short;
-  String? long;
-
-  Id({this.short, this.long});
-
-  Id.fromJson(Map<String, dynamic> json) {
-    short = json['short'];
-    long = json['long'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['short'] = short;
-    data['long'] = long;
+    data['identifier'] = identifier;
+    data['language'] = language;
+    data['name'] = name;
+    data['englishName'] = englishName;
+    data['format'] = format;
+    data['type'] = type;
+    data['direction'] = direction;
     return data;
   }
 }

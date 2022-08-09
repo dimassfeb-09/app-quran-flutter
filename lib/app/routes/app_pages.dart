@@ -1,15 +1,13 @@
 import 'package:get/get.dart';
 
-import '../modules/detail_juz/bindings/detail_juz_binding.dart';
-import '../modules/detail_juz/views/detail_juz_view.dart';
-import '../modules/detail_surah/bindings/detail_surah_binding.dart';
-import '../modules/detail_surah/views/detail_surah_view.dart';
+import '../modules/DetailJuz/bindings/detail_juz_binding.dart';
+import '../modules/DetailJuz/views/detail_juz_view.dart';
+import '../modules/DetailSurah/bindings/detail_surah_binding.dart';
+import '../modules/DetailSurah/views/detail_surah_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/introduction/bindings/introduction_binding.dart';
-import '../modules/introduction/views/introduction_view.dart';
-import '../modules/settings/bindings/settings_binding.dart';
-import '../modules/settings/views/settings_view.dart';
+import '../modules/surah/bindings/surah_binding.dart';
+import '../modules/surah/views/surah_view.dart';
 
 part 'app_routes.dart';
 
@@ -23,11 +21,18 @@ class AppPages {
       name: _Paths.HOME,
       page: () => HomeView(),
       binding: HomeBinding(),
+      children: [
+        GetPage(
+          name: _Paths.HOME,
+          page: () => HomeView(),
+          binding: HomeBinding(),
+        ),
+      ],
     ),
     GetPage(
-      name: _Paths.INTRODUCTION,
-      page: () => IntroductionView(),
-      binding: IntroductionBinding(),
+      name: _Paths.SURAH,
+      page: () => const SurahView(),
+      binding: SurahBinding(),
     ),
     GetPage(
       name: _Paths.DETAIL_SURAH,
@@ -36,13 +41,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DETAIL_JUZ,
-      page: () => DetailJuzView(),
+      page: () => const DetailJuzView(),
       binding: DetailJuzBinding(),
-    ),
-    GetPage(
-      name: _Paths.SETTINGS,
-      page: () => SettingsView(),
-      binding: SettingsBinding(),
     ),
   ];
 }

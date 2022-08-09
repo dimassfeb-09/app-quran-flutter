@@ -1,3 +1,4 @@
+import 'package:app_quran/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,6 +12,9 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  HomeController homeController = HomeController();
+  print(homeController.getSurah());
 
   return runApp(
     GetMaterialApp(

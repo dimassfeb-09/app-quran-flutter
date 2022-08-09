@@ -1,134 +1,86 @@
-class Surah {
-  int? number;
-  int? sequence;
-  int? numberOfVerses;
-  Name? name;
-  Revelation? revelation;
-  Tafsir? tafsir;
+// To parse this JSON data, do
+//
+//     final surah = surahFromJson(jsonString);
 
-  Surah(
-      {this.number,
-      this.sequence,
-      this.numberOfVerses,
-      this.name,
-      this.revelation,
-      this.tafsir});
+import 'package:meta/meta.dart';
+import 'dart:convert';
 
-  Surah.fromJson(Map<String, dynamic> json) {
-    number = json['number'];
-    sequence = json['sequence'];
-    numberOfVerses = json['numberOfVerses'];
-    name = json['name'] != null ? Name?.fromJson(json['name']) : null;
-    revelation = json['revelation'] != null
-        ? Revelation?.fromJson(json['revelation'])
-        : null;
-    tafsir = json['tafsir'] != null ? Tafsir?.fromJson(json['tafsir']) : null;
-  }
+SurahModels surahFromJson(String str) => SurahModels.fromJson(json.decode(str));
 
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['number'] = number;
-    data['sequence'] = sequence;
-    data['numberOfVerses'] = numberOfVerses;
-    if (name != null) {
-      data['name'] = name?.toJson();
-    }
-    if (revelation != null) {
-      data['revelation'] = revelation?.toJson();
-    }
-    if (tafsir != null) {
-      data['tafsir'] = tafsir?.toJson();
-    }
-    return data;
-  }
+String surahToJson(SurahModels data) => json.encode(data.toJson());
+
+class SurahModels {
+  SurahModels({
+    required this.id,
+    required this.revelationPlace,
+    required this.revelationOrder,
+    required this.bismillahPre,
+    required this.nameSimple,
+    required this.nameComplex,
+    required this.nameArabic,
+    required this.versesCount,
+    required this.pages,
+    required this.chapterNumber,
+    required this.translatedName,
+  });
+
+  int id;
+  String revelationPlace;
+  int revelationOrder;
+  bool bismillahPre;
+  String nameSimple;
+  String nameComplex;
+  String nameArabic;
+  int versesCount;
+  List<int> pages;
+  int chapterNumber;
+  TranslatedName translatedName;
+
+  factory SurahModels.fromJson(Map<String, dynamic> json) => SurahModels(
+        id: json["id"],
+        revelationPlace: json["revelation_place"],
+        revelationOrder: json["revelation_order"],
+        bismillahPre: json["bismillah_pre"],
+        nameSimple: json["name_simple"],
+        nameComplex: json["name_complex"],
+        nameArabic: json["name_arabic"],
+        versesCount: json["verses_count"],
+        pages: List<int>.from(json["pages"].map((x) => x)),
+        chapterNumber: json["chapter_number"],
+        translatedName: TranslatedName.fromJson(json["translated_name"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "revelation_place": revelationPlace,
+        "revelation_order": revelationOrder,
+        "bismillah_pre": bismillahPre,
+        "name_simple": nameSimple,
+        "name_complex": nameComplex,
+        "name_arabic": nameArabic,
+        "verses_count": versesCount,
+        "pages": List<dynamic>.from(pages.map((x) => x)),
+        "chapter_number": chapterNumber,
+        "translated_name": translatedName.toJson(),
+      };
 }
 
-class Name {
-  String? short;
-  String? long;
-  Transliteration? transliteration;
-  Transliteration? translation;
+class TranslatedName {
+  TranslatedName({
+    required this.languageName,
+    required this.name,
+  });
 
-  Name({this.short, this.long, this.transliteration, this.translation});
+  String languageName;
+  String name;
 
-  Name.fromJson(Map<String, dynamic> json) {
-    short = json['short'];
-    long = json['long'];
-    transliteration = json['transliteration'] != null
-        ? Transliteration?.fromJson(json['transliteration'])
-        : null;
-    translation = json['translation'] != null
-        ? Transliteration?.fromJson(json['translation'])
-        : null;
-  }
+  factory TranslatedName.fromJson(Map<String, dynamic> json) => TranslatedName(
+        languageName: json["language_name"],
+        name: json["name"],
+      );
 
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['short'] = short;
-    data['long'] = long;
-    if (transliteration != null) {
-      data['transliteration'] = transliteration?.toJson();
-    }
-    if (translation != null) {
-      data['translation'] = translation?.toJson();
-    }
-    return data;
-  }
-}
-
-class Transliteration {
-  String? en;
-  String? id;
-
-  Transliteration({this.en, this.id});
-
-  Transliteration.fromJson(Map<String, dynamic> json) {
-    en = json['en'];
-    id = json['id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['en'] = en;
-    data['id'] = id;
-    return data;
-  }
-}
-
-class Revelation {
-  String? arab;
-  String? en;
-  String? id;
-
-  Revelation({this.arab, this.en, this.id});
-
-  Revelation.fromJson(Map<String, dynamic> json) {
-    arab = json['arab'];
-    en = json['en'];
-    id = json['id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['arab'] = arab;
-    data['en'] = en;
-    data['id'] = id;
-    return data;
-  }
-}
-
-class Tafsir {
-  String? id;
-
-  Tafsir({this.id});
-
-  Tafsir.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['id'] = id;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "language_name": languageName,
+        "name": name,
+      };
 }

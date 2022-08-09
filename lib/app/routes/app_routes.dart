@@ -4,17 +4,15 @@ part of 'app_pages.dart';
 abstract class Routes {
   Routes._();
   static const HOME = _Paths.HOME;
-  static const INTRODUCTION = _Paths.INTRODUCTION;
+  static const SURAH = _Paths.SURAH;
   static const DETAIL_SURAH = _Paths.DETAIL_SURAH;
   static const DETAIL_JUZ = _Paths.DETAIL_JUZ;
-  static const SETTINGS = _Paths.SETTINGS;
 }
 
 abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
-  static const INTRODUCTION = '/introduction';
+  static const SURAH = '/surah';
   static const DETAIL_SURAH = '/detail-surah';
   static const DETAIL_JUZ = '/detail-juz';
-  static const SETTINGS = '/settings';
 }

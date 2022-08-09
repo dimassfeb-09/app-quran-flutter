@@ -1,3 +1,6 @@
 import 'package:flutter/material.dart';
 
-const PurpleApp = Color(0xFF672CBC);
+const colorPrimary = Color(0xFF56A9E9);
+const colorPrimarySoft = Color(0xFF88C2EF);
+const colorWhite = Colors.white;
+const colorBlack = Colors.black;

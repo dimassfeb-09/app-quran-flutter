@@ -1,214 +1,248 @@
-import 'package:app_quran/app/modules/settings/views/settings_view.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:app_quran/app/assets/theme/colors_constant.dart';
+import 'package:app_quran/app/data/models/juz_model.dart';
+import 'package:app_quran/app/data/models/surah_model.dart';
+import 'package:app_quran/app/modules/DetailJuz/controllers/detail_juz_controller.dart';
 import 'package:app_quran/app/routes/app_pages.dart';
+import 'package:flutter/material.dart';
 
-import 'package:get_storage/get_storage.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:get/get.dart';
 
-import '../../../data/models/juz_model.dart' as juzModel;
 import '../controllers/home_controller.dart';
-import '../../../data/models/surah_model.dart' as surahModel;
-import '../../../assets/theme/colors_constant.dart';
+import 'package:http/http.dart' as http;
 
-RxString lastReadSurah = ''.obs;
-RxString lastReadSurahKe = ''.obs;
-
-Public public = Public();
-
-@override
 class HomeView extends GetView<HomeController> {
+  HomeController homeController = HomeController();
+
+  DetailJuzController detailJuzController = DetailJuzController();
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> menu = [
+      GetSurahWidget(controller: controller),
+      Container(
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: FutureBuilder<List<JuzModels>>(
+          future: controller.getJuz(),
+          builder: (BuildContext context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Text("LOADING"),
+              );
+            } else {
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: 30,
+                itemBuilder: (BuildContext context, int index) {
+                  JuzModels juz = snapshot.data![index];
+                  return ListTile(
+                    onTap: () async {
+                      Get.toNamed(Routes.DETAIL_JUZ, arguments: juz);
+                    },
+                    leading: CircleAvatar(
+                      child: Text(
+                        "${index + 1}",
+                        style: const TextStyle(color: colorWhite),
+                      ),
+                      backgroundColor: colorPrimary,
+                    ),
+                    title: Text("Juz ke ${index + 1}"),
+                  );
+                },
+              );
+            }
+          },
+        ),
+      ),
+      Container(
+        height: 100,
+        width: 100,
+        child: Text("Menu Bookmark"),
+      ),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: colorPrimary,
+        elevation: 0,
+        toolbarHeight: 0,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: colorPrimary,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Baca Al Quran",
+                          style: TextStyle(
+                            color: colorWhite,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Icon(Icons.notifications, color: colorWhite),
+                            SizedBox(width: 10),
+                            Container(
+                              height: 35,
+                              width: 35,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(25),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      "https://i.ibb.co/YpKbD3P/image.png"),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 30),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: colorWhite,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Obx(
+                        () => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.chrome_reader_mode_rounded),
+                                SizedBox(width: 20),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Last Read"),
+                                    SizedBox(height: 5),
+                                    Text(controller.lastReadTitle.value == ""
+                                        ? 'Belum baca'
+                                        : controller.lastReadTitle.value),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Container(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                controller.lastReadArab.value == ""
+                                    ? ''
+                                    : controller.lastReadArab.value
+                                        .split("سُورَةُ")
+                                        .last,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                height: 60,
+                decoration: BoxDecoration(
+                  color: colorPrimary,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SelectMenu(
+                      controller: controller,
+                      title: "Surah",
+                      index: 0,
+                    ),
+                    SelectMenu(
+                      controller: controller,
+                      title: "Juz",
+                      index: 1,
+                    ),
+                    SelectMenu(
+                      controller: controller,
+                      title: "Bookmark",
+                      index: 2,
+                    ),
+                  ],
+                ),
+              ),
+              Obx(
+                () => Container(
+                  child: menu.elementAt(controller.selectedMenu.value),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SelectMenu extends StatelessWidget {
+  const SelectMenu({
+    Key? key,
+    required this.controller,
+    required this.index,
+    required this.title,
+  }) : super(key: key);
+
+  final HomeController controller;
+  final int index;
+  final String title;
+
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Scaffold(
-        backgroundColor: public.status == true ? Colors.black : Colors.white,
-        appBar: AppBar(
-          toolbarHeight: 300,
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          title: Column(
-            children: [
-              AppBarCustom(),
-              SalamNameCustom(),
-              LastReadCustom(),
-            ],
+      () => GestureDetector(
+        onTap: () {
+          controller.selectedMenu.value = index;
+        },
+        child: Container(
+          margin: EdgeInsets.all(10),
+          height: 50,
+          width: MediaQuery.of(context).size.width * 0.24,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: controller.selectedMenu.value == index
+                ? colorPrimarySoft
+                : colorPrimarySoft.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(500),
           ),
-        ),
-        body: DefaultTabController(
-          length: 3,
-          child: Padding(
-            padding: EdgeInsets.all(24),
-            child: Column(
-              children: [
-                TabBar(
-                  labelColor: Colors.purple,
-                  indicatorColor: Colors.purple,
-                  unselectedLabelColor: Colors.purple[200],
-                  tabs: [
-                    Tab(text: "Surah"),
-                    Tab(text: "Juz"),
-                    Tab(text: "Bookmark"),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      ListView(
-                        children: [
-                          FutureBuilder<List<surahModel.Surah>>(
-                            future: controller.getSurah(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Padding(
-                                  padding: EdgeInsets.only(top: 150),
-                                  child: Center(
-                                    child: LoadingAnimationWidget.inkDrop(
-                                        color: Colors.grey, size: 50),
-                                  ),
-                                );
-                              } else {
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (context, index) {
-                                    surahModel.Surah surah =
-                                        snapshot.data![index];
-                                    return ListTile(
-                                      onTap: () {
-                                        GetStorage box = GetStorage();
-
-                                        box.write("lastRead", {
-                                          "surah":
-                                              "${surah.name!.transliteration!.id}",
-                                          "surahKe": "${surah.number}",
-                                        });
-
-                                        if (box.read("lastRead") != null) {
-                                          lastReadSurah.value =
-                                              box.read("lastRead")["surah"];
-                                          lastReadSurahKe.value =
-                                              box.read("lastRead")["surahKe"];
-                                        } else {
-                                          lastReadSurah.value = 'Belum Baca';
-                                        }
-
-                                        Get.toNamed(Routes.DETAIL_SURAH,
-                                            arguments: surah);
-                                      },
-                                      leading: CircleAvatar(
-                                        backgroundImage: AssetImage(
-                                            "assets/images/CircleAvatar.png"),
-                                        backgroundColor: public.status == true
-                                            ? Colors.black
-                                            : Colors.white,
-                                        child: Text(
-                                          "${surah.number}",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: public.status == true
-                                                  ? Colors.white
-                                                  : Colors.black),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        "${surah.name!.transliteration!.id} (${surah.name!.translation!.id})",
-                                        style: TextStyle(
-                                          color: public.status == true
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        "${surah.numberOfVerses} Ayat - ${surah.revelation!.id}",
-                                        style: TextStyle(
-                                          color: public.status == true
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              } // else
-                            },
-                          ),
-                        ],
-                      ),
-                      ListView(
-                        children: [
-                          FutureBuilder<List<juzModel.Juz>>(
-                            future: controller.getJuz(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Padding(
-                                  padding: EdgeInsets.only(top: 150),
-                                  child: Center(
-                                    child: LoadingAnimationWidget.inkDrop(
-                                        color: Colors.grey, size: 50),
-                                  ),
-                                );
-                              } else {
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: snapshot.data?.length,
-                                  itemBuilder: (context, index) {
-                                    juzModel.Juz juz = snapshot.data![index];
-                                    return ListTile(
-                                      onTap: () {
-                                        Get.toNamed(Routes.DETAIL_JUZ,
-                                            arguments: juz);
-                                      },
-                                      leading: CircleAvatar(
-                                        backgroundImage: AssetImage(
-                                            "assets/images/CircleAvatar.png"),
-                                        backgroundColor: public.status == true
-                                            ? Colors.black
-                                            : Colors.white,
-                                        child: Text(
-                                          "${index + 1}",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: public.status == true
-                                                  ? Colors.white
-                                                  : Colors.black),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        "Juz ${juz.juz}",
-                                        style: TextStyle(
-                                          color: public.status == true
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        "${juz.start} sampai ${juz.end}",
-                                        style: TextStyle(
-                                          color: public.status == true
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              } // else
-                            },
-                          ),
-                        ],
-                      ),
-                      Tab(
-                        text: "Belum Build",
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+          child: Text(
+            title,
+            style: TextStyle(
+              color: colorWhite,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -217,284 +251,59 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-class LastReadCustom extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    HomeController homeController = HomeController();
-
-    GetStorage box = GetStorage();
-
-    return Stack(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child:
-              Image(image: AssetImage("assets/images/FrameTerakhirLihat.png")),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 19, left: 44),
-          child: Obx(() => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.book),
-                      Text("Terakhir Dibaca",
-                          style: TextStyle(
-                              fontFamily: "PoppinsReg", fontSize: 14)),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "${lastReadSurah.value.toString() != '' ? '${lastReadSurah.value.toString()}' : 'Belum Baca'}",
-                    style: TextStyle(fontFamily: "PoppinsReg", fontSize: 18),
-                  ),
-                  SizedBox(height: 1),
-                  Text(
-                    "Surah Ke - ${lastReadSurahKe.value}",
-                    style: TextStyle(fontFamily: "PoppinsReg", fontSize: 14),
-                  ),
-                ],
-              )),
-        )
-      ],
-    );
-  }
-}
-
-class SalamNameCustom extends StatelessWidget {
-  const SalamNameCustom({
+class GetSurahWidget extends StatelessWidget {
+  const GetSurahWidget({
     Key? key,
+    required this.controller,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(top: 24, left: 24, bottom: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Assalamualaikum",
-              style: TextStyle(
-                fontFamily: "PoppinsReg",
-                fontSize: 18,
-                color: public.status == true ? Colors.white : Colors.black,
-              )),
-          Text("Dimas Febriyanto",
-              style: TextStyle(
-                fontFamily: "PoppinsReg",
-                fontSize: 24,
-                color: public.status == true ? Colors.white : Colors.black,
-              )),
-        ],
-      ),
-    );
-  }
-}
-
-class AppBarCustom extends StatelessWidget {
-  const AppBarCustom({
-    Key? key,
-  }) : super(key: key);
+  final HomeController controller;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Text(
-                "Quran App",
-                style: TextStyle(
-                  fontFamily: "PoppinsBold",
-                  fontSize: 20,
-                  color: public.status == true ? PurpleApp : PurpleApp,
-                ),
-              ),
-            ],
-          ),
-          IconButton(
-              onPressed: () {
-                Get.toNamed(Routes.SETTINGS);
-              },
-              icon: Icon(
-                Icons.settings,
-                color: Colors.grey,
-              )),
-        ],
-      ),
-    );
-  }
-}
+    return FutureBuilder<List<SurahModels>>(
+      future: controller.getSurah(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return Container(
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: snapshot.data?.length,
+              itemBuilder: (BuildContext context, int index) {
+                var surah = snapshot.data![index];
+                return ListTile(
+                  onTap: () {
+                    controller.lastReadTitle.value = surah.nameSimple;
+                    controller.lastReadArab.value = surah.nameArabic;
 
-// class AppBarCustom extends StatelessWidget {
-//   const AppBarCustom({
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         Row(
-//           children: [
-//             SizedBox(width: 24),
-//             IconButton(
-//               onPressed: () {},
-//               icon: Image(
-//                 image: AssetImage("assets/images/MenuIcon.png"),
-//               ),
-//               iconSize: 24,
-//             ),
-//             SizedBox(width: 24),
-//             Text(
-//               "Quran App",
-//               style: TextStyle(
-//                   fontFamily: "PoppinsBold",
-//                   fontSize: 20,
-//                   color: Color(0xFF672CBC)),
-//             ),
-//           ],
-//         ),
-//         IconButton(
-//           onPressed: () {},
-//           icon: Icon(Icons.search),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-/*
-
-  FutureBuilder<List<Surah>>(
-              future: getSurah(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      Surah surah = snapshot.data![index];
-                      return ListTile(
-                        onTap: () {
-                          Get.toNamed(Routes.DETAIL_SURAH);
-                        },
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              AssetImage("assets/images/CircleAvatar.png"),
-                          backgroundColor: Colors.white,
-                          child: Text(
-                            "${surah.number}",
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        title: Text(
-                            "${surah.name!.transliteration!.id} (${surah.name!.translation!.id})"),
-                        subtitle: Text(
-                            "${surah.numberOfVerses} Ayat - ${surah.revelation!.id}"),
-                      );
-                    },
-                  );
-                } // else
+                    Get.toNamed(Routes.DETAIL_SURAH, arguments: surah);
+                  },
+                  leading: CircleAvatar(
+                    child: Text(
+                      "${index + 1}",
+                      style: const TextStyle(color: colorWhite),
+                    ),
+                    backgroundColor: colorPrimary,
+                  ),
+                  title: Text(surah.nameSimple),
+                  subtitle: Text(
+                    "${surah.translatedName.name} (${surah.versesCount})",
+                  ),
+                );
               },
             ),
-
- */
-
-/*
-
-  TabBar(
-                tabs: [
-                  Tab(
-                    text: "SURAH",
-                  ),
-                  Tab(
-                    text: "JUZ",
-                  ),
-                  Tab(
-                    text: "BOOKMARK",
-                  ),
-                ],
-              ),
-              TabBarView(
-                children: [
-                  Text("HALO"),
-                  Text("HALO"),
-                  Text("HALO"),
-                ],
-              ),
-
- */
-
-
-// TabBarView(
-//                     children: [
-//                       FutureBuilder<List<Surah>>(
-//                         future: getSurah(),
-//                         builder: (context, snapshot) {
-//                           if (snapshot.connectionState ==
-//                               ConnectionState.waiting) {
-//                             return Center(child: CircularProgressIndicator());
-//                           } else {
-//                             return ListView.builder(
-//                               shrinkWrap: true,
-//                               physics: NeverScrollableScrollPhysics(),
-//                               itemCount: snapshot.data!.length,
-//                               itemBuilder: (context, index) {
-//                                 Surah surah = snapshot.data![index];
-//                                 return ListTile(
-//                                   onTap: () {
-//                                     Get.toNamed(Routes.DETAIL_SURAH);
-//                                   },
-//                                   leading: CircleAvatar(
-//                                     backgroundImage: AssetImage(
-//                                         "assets/images/CircleAvatar.png"),
-//                                     backgroundColor: Colors.white,
-//                                     child: Text(
-//                                       "${surah.number}",
-//                                       style: TextStyle(fontSize: 12),
-//                                     ),
-//                                   ),
-//                                   title: Text(
-//                                       "${surah.name!.transliteration!.id} (${surah.name!.translation!.id})"),
-//                                   subtitle: Text(
-//                                       "${surah.numberOfVerses} Ayat - ${surah.revelation!.id}"),
-//                                 );
-//                               },
-//                             );
-//                           } // else
-//                         },
-//                       ),
-//                       ListView.builder(
-//                         itemCount: 30,
-//                         itemBuilder: (context, index) {
-//                           return ListTile(
-//                             leading: CircleAvatar(
-//                               backgroundColor: Colors.red,
-//                               child: Text("${index + 1}"),
-//                             ),
-//                           );
-//                         },
-//                       ),
-//                       ListView.builder(
-//                         itemCount: 30,
-//                         itemBuilder: (context, index) {
-//                           return ListTile(
-//                             leading: CircleAvatar(
-//                               child: Text("${index + 1}"),
-//                               backgroundColor: Colors.green,
-//                             ),
-//                           );
-//                         },
-//                       ),
-//                     ],
-//                   ),
+          );
+        }
+      },
+    );
+  }
+}

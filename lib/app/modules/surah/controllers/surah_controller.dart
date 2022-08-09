@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class SettingsController extends GetxController {
-  //TODO: Implement SettingsController
+class SurahController extends GetxController {
+  //TODO: Implement SurahController
 
   final count = 0.obs;
   @override
@@ -15,6 +15,9 @@ class SettingsController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    super.onClose();
+  }
+
   void increment() => count.value++;
 }
